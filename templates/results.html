@@ -1,0 +1,124 @@
+<!-- templates/results.html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Results - EV Charging Station Finder</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <h1>Nearest Charging Stations</h1>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+      <a href="/">Go back</a>
+    {% else %}
+      <div class="info">
+        <p>Query Location: {{ query_lat }}, {{ query_lon }}</p>
+        <a href="/">Search again</a>
+      </div>
+
+      <div class="results">
+        {% for s in nearest %}
+          <div class="station-card">
+            <h3>{{ s.station_name }}</h3>
+            <p>{{ s.street_address }} | {{ s.city }}</p>
+            <p>Distance: <strong>{{ s.distance_km }} km</strong></p>
+            <p>Level1: {{ s.level1 }} &nbsp;|&nbsp; Level2: {{ s.level2 }} &nbsp;|&nbsp; DC Fast: {{ s.dc_fast }}</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      <h2>Map</h2>
+      <div class="map">
+        {{ map_html|safe }}
+      </div>
+    {% endif %}
+
+    <footer>
+      <p>Built with Python • Flask • Folium</p>
+    </footer>
+  </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nearest EV Charging Stations</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .map-container {
+      width: 100%;
+      height: 500px;
+      margin-top: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .stations-list {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .station {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+
+    .station:last-child {
+      border-bottom: none;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    a.back-link {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    a.back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ Nearest EV Charging Stations</h1>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+      <a href="/" class="back-link">← Go Back</a>
+    {% else %}
+      <div class="map-container">
+        {{ map_html|safe }}
+      </div>
+
+      <div class="stations-list">
+        <h2>📍 Nearby Stations ({{ nearest|length }})</h2>
+        {% for s in nearest %}
+          <div class="station">
+            <h3>{{ s.station_name }}</h3>
+            <p>{{ s.street_address }}, {{ s.city }}</p>
+            <p><strong>Access:</strong> {{ s.access }}</p>
+            <p><strong>Distance:</strong> {{ s.distance_km }} km</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      <a href="/" class="back-link">← Search Again</a>
+    {% endif %}
+  </div>
+</body>
+</html>
